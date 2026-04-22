@@ -1,6 +1,8 @@
 import gspread
 from google.oauth2.service_account import Credentials
 import time
+import os
+import json
 
 CACHE = {
     "data": {},
@@ -16,7 +18,12 @@ def get_sheet_data():
         return CACHE["data"]
 
     scope = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
-    creds = Credentials.from_service_account_file("credentials.json", scopes=scope)
+    # 🔥 ENV से credentials लेना
+    creds_json = os.environ.get("GOOGLE_CREDENTIALS")
+    creds_dict = json.loads(creds_json)
+
+    creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
+
     client = gspread.authorize(creds)
 
     sheet = client.open_by_key("14jWhRGOWOXD3CpQkt1Dr3siokpCsIwxJTa7lJFDup1c").sheet1
