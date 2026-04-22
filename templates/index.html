@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Watchlist Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<h1>📊 Watchlist Dashboard</h1>
+
+<!-- 🔥 TAG FILTER BAR -->
+<div class="tag-bar">
+    <button class="tag-all active" onclick="filterTag('ALL', this)">ALL</button>
+    <button class="tag-swing" onclick="filterTag('BO SWING', this)">BO SWING</button>
+    <button class="tag-long" onclick="filterTag('BO LONG', this)">BO LONG</button>
+    <button class="tag-ipo" onclick="filterTag('IPO', this)">IPO</button>
+    <button class="tag-watch" onclick="filterTag('WATCH', this)">WATCH</button>
+    <button class="tag-ignore" onclick="filterTag('IGNORE', this)">IGNORE</button>
+    <button class="tag-miss" onclick="filterTag('MISS', this)">MISS</button>
+    <button class="tag-bought" onclick="filterTag('BOUGHT', this)">BOUGHT</button>
+    <button class="tag-empty" onclick="filterTag('EMPTY', this)">EMPTY</button>
+</div>
+
+<div class="table-container">
+
+    <div style="margin-bottom: 10px;">
+        <input
+                type="text"
+                id="searchBox"
+                placeholder="🔍 Search symbol..."
+                style="padding:8px; width:250px; border-radius:6px; border:1px solid #ccc;"
+        >
+    </div>
+    <form method="POST" action="/add" style="margin-bottom:10px;">
+        <input
+                name="symbol"
+                placeholder="Add stock (e.g. RELIANCE)"
+                required
+                style="padding:6px; border-radius:5px;"
+        >
+        <button type="submit">➕ Add</button>
+    </form>
+    <table>
+
+        <thead>
+        <tr>
+            <th>Sr No</th>
+            <th onclick="sortTable(1)">Symbol <span class="sort-icon">⬍</span></th>
+            <th>NP PY</th>
+            <th>NP 3Q</th>
+            <th>NP 2Q</th>
+            <th>NP Prev</th>
+            <th>NP Latest</th>
+            <th onclick="sortTable(7)">YoY <span class="sort-icon">⬍</span></th>
+            <th onclick="sortTable(8)">P2P <span class="sort-icon">⬍</span></th>
+            <th onclick="sortTable(9)">Pre QoQ <span class="sort-icon">⬍</span></th>
+            <th onclick="sortTable(10)">L QoQ <span class="sort-icon">⬍</span></th>
+            <th onclick="sortTable(11)">% Change <span class="sort-icon">⬍</span></th>
+            <th onclick="sortTable(12)">CMP <span class="sort-icon">⬍</span></th>
+            <th>BO</th>
+            <th onclick="sortTable(14)">Down BO <span class="sort-icon">⬍</span></th>
+            <th>Tag</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for stock in stocks %}
+
+            <tr data-tag="{{ stock.tag or '' }}">
+
+                <td>{{ loop.index }}</td>
+                <td class="symbol">{{ stock.symbol }}</td>
+
+                <td>{{ stock.np1 or '-' }}</td>
+                <td>{{ stock.np2 or '-' }}</td>
+                <td>{{ stock.np3 or '-' }}</td>
+                <td>{{ stock.np4 or '-' }}</td>
+                <td>{{ stock.np5 or '-' }}</td>
+
+                <!-- 🔥 SAFE CONVERSION -->
+                {% set yoy = (stock.yoy or 0)|string|replace('%','')|float %}
+                {% set p2p = (stock.p2p or 0)|string|replace('%','')|float %}
+                {% set pre = (stock.pre_qoq or 0)|string|replace('%','')|float %}
+                {% set lq = (stock.l_qoq or 0)|string|replace('%','')|float %}
+                {% set change = (stock.change or 0)|string|replace('%','')|float %}
+                {% set down = (stock.down_bo or 0)|float %}
+
+                <!-- 🎨 COLOR MACRO -->
+                {% macro color(val) %}
+                    {% if val > 20 %} strong-green
+                    {% elif val > 10 %} light-green
+                    {% elif val > 1 %} yellow
+                    {% elif val >= 0 %} orange
+                    {% else %} red
+                    {% endif %}
+                {% endmacro %}
+
+                <td class="{{ color(yoy) }}">{{ stock.yoy or '-' }}%</td>
+                <td class="{{ color(p2p) }}">{{ stock.p2p or '-' }}%</td>
+                <td class="{{ color(pre) }}">{{ stock.pre_qoq or '-' }}%</td>
+                <td class="{{ color(lq) }}">{{ stock.l_qoq or '-' }}%</td>
+
+                <!-- 🔥 FIXED CHANGE -->
+                <td class="{{ 'strong-green' if change > 0 else 'red' }}">
+                    {{ stock.change or '-' }}%
+                </td>
+
+                <td>{{ stock.cmp or '-' }}</td>
+
+                <td>
+                    <input class="bo-input" data-symbol="{{ stock.symbol }}" value="{{ stock.bo or '' }}">
+                </td>
+
+                <!-- 🔥 FIXED DOWN BO -->
+                <td class="{{ 'strong-green' if down > 0 else 'red' }}">
+                    {{ stock.down_bo if stock.down_bo != None else '-' }}%
+                </td>
+
+                <td>
+                    <select class="tag-select" data-symbol="{{ stock.symbol }}">
+                        <option value="">--Select--</option>
+                        <option value="BO SWING" {{ 'selected' if stock.tag == 'BO SWING' else '' }}>BO SWING</option>
+                        <option value="BO LONG" {{ 'selected' if stock.tag == 'BO LONG' else '' }}>BO LONG</option>
+                        <option value="IPO" {{ 'selected' if stock.tag == 'IPO' else '' }}>IPO</option>
+                        <option value="WATCH" {{ 'selected' if stock.tag == 'WATCH' else '' }}>WATCH</option>
+                        <option value="IGNORE" {{ 'selected' if stock.tag == 'IGNORE' else '' }}>IGNORE</option>
+                        <option value="MISS" {{ 'selected' if stock.tag == 'MISS' else '' }}>MISS</option>
+                        <option value="BOUGHT" {{ 'selected' if stock.tag == 'BOUGHT' else '' }}>BOUGHT</option>
+                    </select>
+                </td>
+
+                <td>
+                    <a href="/delete/{{ stock.symbol }}" class="delete">❌</a>
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+body {
+    font-family: Arial;
+    background: #f1f5f9;
+    padding: 20px;
+}
+
+/* TABLE */
+.table-container {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* HEADER */
+thead th {
+    position: sticky;
+    top: 0;
+    background: #334155;
+    color: white;
+    font-weight: 600;
+}
+
+/* CELLS */
+th, td {
+    border: 1px solid #e2e8f0;
+    padding: 8px;
+    text-align: center;
+}
+
+/* ROW HOVER */
+tr:hover {
+    background: #f8fafc;
+}
+
+/* SYMBOL */
+.symbol {
+    text-align: left;
+    padding-left: 12px;
+    font-weight: 500;
+}
+
+/* SOFT COLORS */
+.green {
+    color: #16a34a;
+    font-weight: 500;
+}
+
+.red {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.orange {
+    color: #ea580c;
+}
+
+/* INPUT */
+input, select {
+    padding: 4px;
+    border: 1px solid #cbd5f5;
+    border-radius: 4px;
+    background: #f8fafc;
+}
+
+/* BO INPUT */
+.bo-input {
+    width: 55px;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* DELETE */
+.delete {
+    color: #dc2626;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* 🔥 TAG BAR */
+.tag-bar {
+    margin: 15px 0;
+}
+
+.tag-bar button {
+    padding: 8px 14px;
+    margin-right: 6px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    opacity: 0.7;
+    transition: 0.2s;
+}
+
+/* ACTIVE BUTTON */
+.tag-bar button.active {
+    opacity: 1;
+    border: 2px solid black;
+}
+
+/* HOVER */
+.tag-bar button:hover {
+    opacity: 1;
+}
+
+/* COLORS */
+.tag-all { background: #374151; }
+.tag-swing { background: #22c55e; }
+.tag-long { background: #3b82f6; }
+.tag-ipo { background: #a855f7; }
+.tag-watch { background: #f59e0b; }
+.tag-ignore { background: #ef4444; }
+.tag-miss { background: #6b7280; }
+.tag-bought { background: #10b981; }
+.tag-empty { background: #0ea5e9; }
+/* 🔥 PROFESSIONAL COLOR SCALE */
+.strong-green {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.light-green {
+    color: #4ade80;
+}
+
+.yellow {
+    color: #eab308;
+}
+
+.orange {
+    color: #f97316;
+}
+
+.red {
+    color: #dc2626;
+    font-weight: 500;
+}
+.tag-bar button {
+    opacity: 0.85;
+}
