@@ -18,9 +18,17 @@ def get_sheet_data():
         return CACHE["data"]
 
     scope = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
-    # 🔥 ENV से credentials लेना
+
+    # 🔥 ENV से credentials लेना (SAFE VERSION)
     creds_json = os.environ.get("GOOGLE_CREDENTIALS")
-    creds_dict = json.loads(creds_json)
+
+    if not creds_json:
+        raise Exception("❌ GOOGLE_CREDENTIALS not found in environment")
+
+    try:
+        creds_dict = json.loads(creds_json)
+    except Exception as e:
+        raise Exception(f"❌ Invalid JSON in GOOGLE_CREDENTIALS: {e}")
 
     creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
 
